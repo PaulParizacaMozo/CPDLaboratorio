@@ -1,0 +1,1 @@
+Tiempo de multiplicación de matrices de tamaño 500: 539.149 ms

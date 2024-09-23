@@ -1,0 +1,65 @@
+# Primer bucle
+❯ valgrind --tool=cachegrind --branch-sim=yes --cache-sim=yes --cachegrind-out-file=bucle1_10000.out ./bucle1_10000 | tee ../outputs/val_bucle1_10000
+==10494== Cachegrind, a high-precision tracing profiler
+==10494== Copyright (C) 2002-2024, and GNU GPL'd, by Nicholas Nethercote et al.
+==10494== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+==10494== Command: ./bucle1_10000
+==10494== 
+--10494-- warning: L3 cache found, using its data for the LL simulation.
+--10494-- warning: specified LL cache: line_size 64  assoc 16  total_size 12,582,912
+--10494-- warning: simulated LL cache: line_size 64  assoc 24  total_size 12,582,912
+primer bucle: 8302.66 ms
+==10494== 
+==10494== I refs:        11,200,435,233
+==10494== I1  misses:             2,084
+==10494== LLi misses:             2,039
+==10494== I1  miss rate:           0.00%
+==10494== LLi miss rate:           0.00%
+==10494== 
+==10494== D refs:         4,601,330,039  (3,400,957,793 rd   + 1,200,372,246 wr)
+==10494== D1  misses:        37,553,139  (   25,030,874 rd   +    12,522,265 wr)
+==10494== LLd misses:        25,015,595  (   12,511,778 rd   +    12,503,817 wr)
+==10494== D1  miss rate:            0.8% (          0.7%     +           1.0%  )
+==10494== LLd miss rate:            0.5% (          0.4%     +           1.0%  )
+==10494== 
+==10494== LL refs:           37,555,223  (   25,032,958 rd   +    12,522,265 wr)
+==10494== LL misses:         25,017,634  (   12,513,817 rd   +    12,503,817 wr)
+==10494== LL miss rate:             0.2% (          0.1%     +           1.0%  )
+==10494== 
+==10494== Branches:       1,197,331,342  (1,097,314,975 cond +   100,016,367 ind)
+==10494== Mispredicts:        6,491,629  (    6,490,129 cond +         1,500 ind)
+==10494== Mispred rate:             0.5% (          0.6%     +           0.0%   )
+
+# Segundo Bucle
+
+❯ valgrind --tool=cachegrind --branch-sim=yes --cache-sim=yes --cachegrind-out-file=bucle2_10000.out ./bucle2_10000 | tee ../outputs/val_bucle2_10000
+==10524== Cachegrind, a high-precision tracing profiler
+==10524== Copyright (C) 2002-2024, and GNU GPL'd, by Nicholas Nethercote et al.
+==10524== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+==10524== Command: ./bucle2_10000
+==10524== 
+--10524-- warning: L3 cache found, using its data for the LL simulation.
+--10524-- warning: specified LL cache: line_size 64  assoc 16  total_size 12,582,912
+--10524-- warning: simulated LL cache: line_size 64  assoc 24  total_size 12,582,912
+segundo bucle: 10682.4 ms
+==10524== 
+==10524== I refs:        11,200,435,261
+==10524== I1  misses:             2,085
+==10524== LLi misses:             2,040
+==10524== I1  miss rate:           0.00%
+==10524== LLi miss rate:           0.00%
+==10524== 
+==10524== D refs:         4,601,330,050  (3,400,957,794 rd   + 1,200,372,256 wr)
+==10524== D1  misses:       125,053,138  (  112,530,873 rd   +    12,522,265 wr)
+==10524== LLd misses:        25,024,309  (   12,520,492 rd   +    12,503,817 wr)
+==10524== D1  miss rate:            2.7% (          3.3%     +           1.0%  )
+==10524== LLd miss rate:            0.5% (          0.4%     +           1.0%  )
+==10524== 
+==10524== LL refs:          125,055,223  (  112,532,958 rd   +    12,522,265 wr)
+==10524== LL misses:         25,026,349  (   12,522,532 rd   +    12,503,817 wr)
+==10524== LL miss rate:             0.2% (          0.1%     +           1.0%  )
+==10524== 
+==10524== Branches:       1,197,331,341  (1,097,314,976 cond +   100,016,365 ind)
+==10524== Mispredicts:        6,491,628  (    6,490,128 cond +         1,500 ind)
+==10524== Mispred rate:             0.5% (          0.6%     +           0.0%   )
+❯ ls
