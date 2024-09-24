@@ -1,6 +1,3 @@
-Aquí tienes un ejemplo de cómo deberías estructurar un archivo `README.md` para tu proyecto, con las imágenes incluidas y la referencia a los archivos en el directorio `captures/`. El texto sigue el formato que usaste en LaTeX.
-
-```markdown
 # Laboratorio 01 - Computación Paralela y Distribuida
 
 Este repositorio contiene el código y los análisis del Laboratorio 01 de la materia de **Computación Paralela y Distribuida**. A continuación, se detallan las implementaciones, los objetivos, y los análisis realizados.
