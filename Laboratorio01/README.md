@@ -68,7 +68,7 @@ El análisis se realizó utilizando Valgrind y KCachegrind, mostrando cómo el p
 ![Análisis de caché con KCachegrind del bucle 1](captures/blucle1Kcachegrind.png)
 
 Resultados clave:
-- Tasa de fallos en caché de datos (\textit{D1 miss rate}): 0.8%
+- Tasa de fallos en caché de datos (D1 miss rate): 0.8%
 - Tiempo de ejecución: 8302.66 ms
 
 ### Análisis de Valgrind del Segundo Bucle:
@@ -77,10 +77,10 @@ Resultados clave:
 
 ### Análisis de KCachegrind del Segundo Bucle:
 
-![Análisis de caché con KCachegrind del bucle 2](captures/bucle2Kcachegrind.png)
+![Análisis de caché con KCachegrind del bucle 2](captures/bucle2kcachegrind.png)
 
 Resultados clave:
-- Tasa de fallos en caché de datos (\textit{D1 miss rate}): 2.7%
+- Tasa de fallos en caché de datos (D1 miss rate): 2.7%
 - Tiempo de ejecución: 10682.4 ms
 
 ## Multiplicación de Matrices Clásica
