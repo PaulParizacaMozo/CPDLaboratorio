@@ -1,25 +1,99 @@
-### Ejercicio 1:
+Aquí tienes un ejemplo de cómo deberías estructurar un archivo `README.md` para tu proyecto, con las imágenes incluidas y la referencia a los archivos en el directorio `captures/`. El texto sigue el formato que usaste en LaTeX.
 
-1. **Primer bucle**:
-   - Accede a la matriz `A` en **orden fila por fila**. En C, las matrices se almacenan en **row-major order** (primero se almacenan los elementos de la fila 0, luego de la fila 1, etc.).
-   - Por lo tanto, los elementos de `A[i][j]` en la primera versión del bucle son accesados en bloques contiguos en memoria. Esto mejora el rendimiento debido a la **localidad espacial**, ya que varios elementos de una misma fila pueden ser cargados en una sola línea de caché.
-   - En este caso, se espera que haya menos **fallos de caché**, lo que aumenta la eficiencia del programa.
+```markdown
+# Laboratorio 01 - Computación Paralela y Distribuida
 
-2. **Segundo bucle**:
-   - En esta versión, el orden de los bucles se invierte, lo que hace que los elementos de la matriz se accedan en orden columna por columna.
-   - Como resultado, los accesos a `A[i][j]` están más dispersos en la memoria. Esto provoca que la caché tenga que cargar líneas de memoria con frecuencia, causando **más fallos de caché**.
-   - En este caso, la **localidad espacial** se pierde, lo que resulta en un rendimiento significativamente peor.
+Este repositorio contiene el código y los análisis del Laboratorio 01 de la materia de **Computación Paralela y Distribuida**. A continuación, se detallan las implementaciones, los objetivos, y los análisis realizados.
 
-- La **caché** del procesador guarda los datos en bloques llamados **líneas de caché**. En nuestro caso, estamos accediendo a una matriz bidimensional almacenada en **row-major order** (cada fila se almacena contiguamente en la memoria).
-- En el primer bucle, se accede a los elementos de la matriz en secuencia, lo que significa que una sola línea de caché puede contener múltiples elementos seguidos, resultando en menos **fallos de caché**.
-- En el segundo bucle, se accede a los elementos de forma dispersa (columna por columna), lo que genera **más fallos de caché** porque cada vez que accedemos a un nuevo elemento en otra columna, la caché tiene que reemplazar datos, lo que ralentiza el programa.
-- Considerando el tiempo de ejecucion el primer bucle es mejor casi en la mitad de tiempo del segundo bucle.
+## Tabla de Contenidos
+1. [Introducción](#introducción)
+2. [Objetivos](#objetivos)
+3. [Desarrollo](#desarrollo)
+    - [Implementación de los bucles anidados FOR](#implementación-de-los-bucles-anidados-for)
+    - [Multiplicación de matrices clásica](#multiplicación-de-matrices-clásica)
+    - [Multiplicación de matrices por bloques](#multiplicación-de-matrices-por-bloques)
+4. [Conclusiones](#conclusiones)
 
-## Pruebas con valgrid
+## Introducción
+En este trabajo se comparan dos enfoques de algoritmos para la manipulación de matrices. Primero, se implementaron dos bucles anidados que realizan la operación de multiplicación de matrices secuencialmente. Luego, se implementan el algoritmo clásico de multiplicación de matrices (tres bucles) y la multiplicación por bloques.
 
-![Descripción de la imagen](captures/valgrid.png)
+Además, se utilizaron herramientas como **Valgrind** y **KCachegrind** para analizar la eficiencia en el uso de la memoria caché y el tiempo de ejecución de cada enfoque.
 
-## Pruebas con kcachegrind
+El código fuente está disponible en [este repositorio de GitHub](https://github.com/PaulParizacaMozo/CPDLaboratorio/tree/main/Laboratorio01).
 
-![Descripción de la imagen](captures/kcachevalgrid.png)
+## Objetivos
+- Implementar y comparar dos bucles anidados para la multiplicación de matrices.
+- Implementar en C/C++ la multiplicación de matrices clásica (tres bucles anidados).
+- Implementar la multiplicación de matrices por bloques y comparar su desempeño con el enfoque clásico.
+- Evaluar ambos algoritmos usando herramientas como **Valgrind** y **KCachegrind**.
 
+## Desarrollo
+
+### Implementación de los bucles anidados FOR
+En esta sección, se implementaron y evaluaron dos bucles anidados con tamaños de matrices de 100, 1000 y 10000. Los resultados en términos de tiempo de ejecución y uso de memoria caché se muestran a continuación.
+
+```cpp
+// Primer bucle anidado
+void primer_bucles() {
+    for (int i = 0; i < MAX; i++) {
+        for (int j = 0; j < MAX; j++) {
+            y[i] += A[i][j] * x[j];
+        }
+    }
+}
+```
+
+```cpp
+// Segundo bucle anidado
+void segundo_bucles() {
+    for (int j = 0; j < MAX; j++) {
+        for (int i = 0; i < MAX; i++) {
+            y[i] += A[i][j] * x[j];
+        }
+    }
+}
+```
+
+### Resultados
+- **Primer bucle:** Tiene un mejor rendimiento gracias a su acceso secuencial a las filas de la matriz, optimizando el uso de la caché. 
+- **Segundo bucle:** Accede a columnas, lo que provoca más fallos de caché.
+
+### Resultados de Valgrind y KCachegrind:
+![Análisis de caché con Valgrind del primer bucle](captures/bucle1Valgrind.png)
+![Análisis de caché con KCachegrind del primer bucle](captures/blucle1Kcachegrind.png)
+
+### Multiplicación de matrices clásica
+La implementación de la multiplicación de matrices clásica sigue el siguiente código:
+
+```cpp
+for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {
+        for (int k = 0; k < N; k++) {
+            C[i][j] += A[i][k] * B[k][j];
+        }
+    }
+}
+```
+
+### Resultados de Valgrind:
+![Análisis de caché con Valgrind de multiplicación clásica](captures/multClasicaValgrind.png)
+![Análisis de caché con KCachegrind de multiplicación clásica](captures/clasicaKcachegrind.png)
+
+### Multiplicación de matrices por bloques
+La multiplicación por bloques optimiza el acceso a la memoria caché, utilizando un tamaño de bloque de 64 bytes, lo que es ideal para arquitecturas modernas como el procesador Intel Core i7-9850H.
+
+### Resultados de Valgrind y KCachegrind:
+![Análisis de caché con Valgrind de multiplicación por bloques](captures/multBloquesValgrind.png)
+![Análisis de caché con KCachegrind de multiplicación por bloques](captures/bloquesKcachegrind.png)
+
+## Conclusiones
+Se concluye que el algoritmo de multiplicación por bloques es más eficiente en cuanto al uso de la caché y el tiempo de ejecución, en comparación con el algoritmo clásico de tres bucles. Las pruebas realizadas con Valgrind y KCachegrind confirman que un acceso optimizado a la memoria es crucial para mejorar el rendimiento en sistemas modernos.
+
+## Referencias
+1. P. Pacheco, *An Introduction to Parallel Programming*, 1st ed., Morgan Kaufmann, 2011.
+2. B. Wicht, "How to profile C++ applications with Callgrind and KCachegrind", 2011. 
+3. Purdue University, "Optimizing Matrix Multiplication", 2023. Available: [https://www.cs.purdue.edu/homes/grr/cs250/lab6-cache/optimizingMatrixMultiplication.pdf](https://www.cs.purdue.edu/homes/grr/cs250/lab6-cache/optimizingMatrixMultiplication.pdf)
+4. Valgrind User Manual, 2023. Available: [http://valgrind.org/docs/manual/manual.html](http://valgrind.org/docs/manual/manual.html)
+```
+
+Este archivo `README.md` sigue el mismo formato que el documento en LaTeX, con las imágenes correctamente referenciadas y las citas en formato IEEE incluidas al final.
